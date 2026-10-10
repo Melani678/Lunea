@@ -15,12 +15,26 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen">
       <header className="bg-white shadow-sm">
-        <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-          <span className="flex items-center gap-3">
-            <Logo className="h-8" />
-            <span className="font-bold text-pink-600">Panel de administración</span>
-          </span>
-          <div className="flex items-center gap-6 text-sm">
+        <nav className="mx-auto flex max-w-5xl flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:py-4">
+          {/* Fila 1: logo + título (y "Salir" solo en celular) */}
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-3">
+              <Logo className="h-8" />
+              <span className="font-bold text-pink-600">
+                <span className="hidden sm:inline">Panel de administración</span>
+                <span className="sm:hidden">Panel</span>
+              </span>
+            </span>
+            <button
+              onClick={logout}
+              className="text-sm text-gray-600 hover:text-red-600 md:hidden"
+            >
+              Salir
+            </button>
+          </div>
+
+          {/* Fila 2: enlaces (si no caben, pasan a otra línea) */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm md:gap-6">
             <NavLink to="/admin/secciones" className={linkClass}>
               Secciones
             </NavLink>
@@ -33,7 +47,10 @@ export default function AdminLayout() {
             <Link to="/" className="text-gray-600 hover:text-pink-600">
               Ver tienda
             </Link>
-            <button onClick={logout} className="text-gray-600 hover:text-red-600">
+            <button
+              onClick={logout}
+              className="hidden text-gray-600 hover:text-red-600 md:block"
+            >
               Cerrar sesión
             </button>
           </div>
