@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { SlidesModule } from './slides/slides.module';
+import { CatalogModule } from './catalog/catalog.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -17,6 +18,7 @@ import { SlidesModule } from './slides/slides.module';
     AuthModule,
     UploadsModule,
     SlidesModule,
+    CatalogModule,
     // AuthModule se agrega solo en el paso 15
   ],
   controllers: [AppController],

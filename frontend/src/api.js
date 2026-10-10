@@ -1,16 +1,17 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api'
 
 export async function api(path, options = {}) {
+  const { responseType, ...fetchOptions } = options
   const token = localStorage.getItem('token')
-  const isFormData = options.body instanceof FormData
+  const isFormData = fetchOptions.body instanceof FormData
 
   const res = await fetch(`${API_URL}${path}`, {
-    ...options,
+    ...fetchOptions,
     headers: {
       // Con FormData el navegador pone el Content-Type correcto
       ...(!isFormData && { 'Content-Type': 'application/json' }),
       ...(token && { Authorization: `Bearer ${token}` }),
-      ...options.headers,
+      ...fetchOptions.headers,
     },
   })
 
@@ -28,5 +29,6 @@ export async function api(path, options = {}) {
       : error.message
     throw new Error(message || 'Error en la petición')
   }
-  return res.json()
+
+  return responseType === 'blob' ? res.blob() : res.json()
 }

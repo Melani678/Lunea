@@ -10,6 +10,7 @@ export default function AdminProducts() {
   const [modal, setModal] = useState(null) // null = cerrado | { product: null } = nuevo | { product } = editar
   const [error, setError] = useState('')
   const [toDelete, setToDelete] = useState(null)
+  const [generating, setGenerating] = useState(false)
 
   useEffect(() => {
     api('/sections')
@@ -36,6 +37,26 @@ export default function AdminProducts() {
         } catch (err) {
         setError(err.message)
         }
+    }
+    async function handleGeneratePdf() {
+      setError('')
+      setGenerating(true)
+      try {
+        const blob = await api(
+          `/catalog/pdf${filter ? `?sectionId=${filter}` : ''}`,
+          { responseType: 'blob' }
+        )
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `catalogo-${new Date().toISOString().slice(0, 10)}.pdf`
+        link.click()
+        setTimeout(() => URL.revokeObjectURL(url), 1000)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setGenerating(false)
+      }
     }
 
   function handleSaved() {
@@ -67,8 +88,21 @@ export default function AdminProducts() {
           >
             Nuevo producto
           </button>
+          <button
+            onClick={handleGeneratePdf}
+            disabled={generating}
+            title="Genera un PDF con todas las secciones, o solo con la sección elegida en el filtro"
+            className="rounded-lg border border-pink-600 px-4 py-2 text-sm font-semibold text-pink-600 hover:bg-pink-50 disabled:opacity-50"
+          >
+            {generating ? 'Generando...' : 'Generar PDF'}
+          </button>
         </div>
       </div>
+      {generating && (
+        <p className="mb-4 text-sm text-gray-500">
+          Generando el PDF... puede tardar un momento, sobre todo si el servidor estaba dormido.
+        </p>
+      )}
 
       {sections.length === 0 && (
         <p className="mb-4 text-sm text-gray-500">
