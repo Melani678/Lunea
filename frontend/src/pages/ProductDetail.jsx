@@ -113,6 +113,12 @@ export default function ProductDetail() {
               {product.description}
             </p>
           )}
+          {WHATSAPP_NUMBER && (sizes.length > 0 || colors.length > 0) && (
+            <p className="mt-6 rounded-lg bg-pink-50 px-4 py-3 text-sm text-pink-700">
+              Puedes elegir tu talla y color (es opcional). Se incluirán en tu mensaje
+              de WhatsApp para que te atendamos más rápido.
+            </p>
+          )}
 
           {sizes.length > 0 && (
             <div className="mt-6">
